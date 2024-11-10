@@ -1,0 +1,55 @@
+# Lifted from https://github.com/dlvhdr/gh-dash/blob/main/.goreleaser.yaml
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+gomod:
+  proxy: true
+  env:
+    - GOPROXY=https://proxy.golang.org,direct
+    - GOSUMDB=sum.golang.org
+    - GOPRIVATE=github.com/itk-dev/gh-itkdev
+  mod: mod
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    flags:
+      - -tags=nodbus
+    goos:
+      - freebsd
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+      - arm
+      - "386"
+    goarm:
+      - 6
+      - 7
+    ldflags:
+      # @see https://pkg.go.dev/cmd/link
+      - -s -w
+      # See `var` block in cmd/root.go.
+      - -X github.com/itk-dev/gh-itkdev/cmd.Version={{.Version}}
+      - -X github.com/itk-dev/gh-itkdev/cmd.Commit={{.Commit}}
+      - -X github.com/itk-dev/gh-itkdev/cmd.Date={{.CommitDate}}
+      - -X github.com/itk-dev/gh-itkdev/cmd.BuiltBy=goreleaser
+
+archives:
+  - format: binary
+    name_template: "gh-itkdev_{{ .Tag }}_{{ .Os }}-{{ .Arch }}{{if .Arm}}_{{.Arm}}{{end}}"
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"

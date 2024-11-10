@@ -3,38 +3,58 @@
 version: '3'
 
 tasks:
-  build:
+  default:
     cmds:
-      - task: format
-      - task: check
-      - go mod tidy
-      - go build
-    # silent: true
+      - task --list
+    silent: true
 
-  format:
+  build:
+    desc: "Check code and build"
     cmds:
-      - go fmt ./...
-    # silent: true
+      - task: check
+      - go build
 
   check:
+    desc: "Check code"
+    cmds:
+      - task: format
+      - task: vet
+      - go mod tidy
+
+  format:
+    desc: "Format code"
+    cmds:
+      - go fmt ./...
+
+  vet:
+    desc: "Vet code"
     cmds:
       - go vet ./...
-    # silent: true
 
   test:
+    desc: "Build and run tests"
     deps:
       - build
     cmds:
       - go test -v ./...
-    # silent: true
 
-  dev:coding-standards:check:
-    desc: Apply and check coding standards
+  goreleaser:
+    deps:
+      - build
+    desc: "Build with GoReleaser and show built version"
     cmds:
-      - task: dev:coding-standards:apply
+      - goreleaser check
+      # @see https://goreleaser.com/cmd/goreleaser_build/
+      - goreleaser build --single-target --snapshot --clean
+      - ./dist/*/gh-itkdev --version
+
+  coding-standards-check:
+    desc: "Apply and check coding standards"
+    cmds:
+      - task: coding-standards-apply
       - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md '**/*.md'
 
-  dev:coding-standards:apply:
-    desc: Apply coding standards
+  coding-standards-apply:
+    desc: "Apply coding standards"
     cmds:
       - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md '**/*.md' --fix
