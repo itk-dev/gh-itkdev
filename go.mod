@@ -1,4 +1,4 @@
-module github.com/rimi-itk/gh-itkdev
+module github.com/itk-dev/gh-itkdev
 
 go 1.22
 

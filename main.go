@@ -1,6 +1,6 @@
 package main
 
-import "github.com/rimi-itk/gh-itkdev/cmd"
+import "github.com/itk-dev/gh-itkdev/cmd"
 
 func main() {
 	cmd.Execute()

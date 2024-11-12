@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/rimi-itk/gh-itkdev/changelog"
+	"github.com/itk-dev/gh-itkdev/changelog"
 	"github.com/spf13/cobra"
 )
 
