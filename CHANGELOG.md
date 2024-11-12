@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.0.0] - 2024-11-12
+
 * [PR-11](https://github.com/itk-dev/gh-itkdev/pull/11)
   Added format detector
 * [PR-9](https://github.com/itk-dev/gh-itkdev/pull/9)
@@ -28,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [PR-2](https://github.com/itk-dev/gh-itkdev/pull/2)
   Added changelog command
 
-[Unreleased]: https://github.com/compare/v0.0.1...HEAD
-[v0.0.1]: https://github.com/compare/v0.0.0...v0.0.1
-[v0.0.0]: https://github.com/releases/tag/v0.0.0
+[Unreleased]: https://github.com/itk-dev/gh-itkdev/compare/v1.0.0...HEAD
+[v1.0.0]: https://github.com/itk-dev/gh-itkdev/compare/v0.0.1...v1.0.0
+[v0.0.1]: https://github.com/itk-dev/gh-itkdev/compare/v0.0.0...v0.0.1
+[v0.0.0]: https://github.com/itk-dev/gh-itkdev/releases/tag/v0.0.0
