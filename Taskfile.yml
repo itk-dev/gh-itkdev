@@ -52,9 +52,9 @@ tasks:
     desc: "Apply and check coding standards"
     cmds:
       - task: coding-standards-apply
-      - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md '**/*.md'
+      - docker run --rm --volume $PWD:/md itkdev/markdownlint --ignore LICENSE.md '**/*.md'
 
   coding-standards-apply:
     desc: "Apply coding standards"
     cmds:
-      - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md '**/*.md' --fix
+      - docker run --rm --volume $PWD:/md itkdev/markdownlint --ignore LICENSE.md '**/*.md' --fix
