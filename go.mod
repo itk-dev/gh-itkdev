@@ -1,6 +1,6 @@
 module github.com/itk-dev/gh-itkdev
 
-go 1.22
+go 1.23
 
 require (
 	github.com/cli/go-gh v1.2.1

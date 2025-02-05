@@ -3,6 +3,7 @@ package changelog
 import (
 	"bufio"
 	"fmt"
+	"iter"
 	"log"
 	"os"
 	"regexp"
@@ -11,8 +12,25 @@ import (
 	"text/template"
 )
 
+// https://stackoverflow.com/a/71624929
+func Map[T, U any](seq iter.Seq[T], f func(T) U) iter.Seq[U] {
+	return func(yield func(U) bool) {
+		for a := range seq {
+			if !yield(f(a)) {
+				return
+			}
+		}
+	}
+}
+
 func addPullRequest(changelog string, pr pullRequest, itemTemplate string) (string, error) {
-	headerPattern := regexp.MustCompile(`(?i)^\#+ +\[unreleased\]`)
+	unreleasedHeaders := []string{"Unreleased", "Under udvikling"}
+	var quotedHeaders []string
+	for header := range Map(slices.Values(unreleasedHeaders), regexp.QuoteMeta) {
+		quotedHeaders = append(quotedHeaders, header)
+	}
+	headerPattern := regexp.MustCompile(fmt.Sprintf(`(?i)^\#+ +\[(%s)\]`, strings.Join(quotedHeaders, "|")))
+
 	unreleasedHeaderIndex := -1
 	var lines []string
 	scanner := bufio.NewScanner(strings.NewReader(changelog))
@@ -28,7 +46,7 @@ func addPullRequest(changelog string, pr pullRequest, itemTemplate string) (stri
 	}
 
 	if unreleasedHeaderIndex < 0 {
-		return "", fmt.Errorf("cannot find \"Unreleased\" header")
+		return "", fmt.Errorf("cannot find %s header", strings.Join(unreleasedHeaders, "/"))
 	}
 
 	// Make sure that we have a blank line after the header

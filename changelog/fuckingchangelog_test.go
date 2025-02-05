@@ -1,6 +1,7 @@
 package changelog
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,6 +15,7 @@ func TestFuckingChangelog(t *testing.T) {
 		pullRequest  pullRequest
 		itemTemplate string
 		expected     string
+		expectedErr  error
 	}{
 		{
 			`## [Unreleased]
@@ -29,6 +31,7 @@ func TestFuckingChangelog(t *testing.T) {
 * [PR-87](https://example.com/pr/87)
   Test
 `,
+			nil,
 		},
 
 		{
@@ -49,6 +52,7 @@ func TestFuckingChangelog(t *testing.T) {
 
 [Unreleased]: https://example.com/
 `,
+			nil,
 		},
 
 		{
@@ -70,6 +74,7 @@ func TestFuckingChangelog(t *testing.T) {
 * [PR-42](https://example.com/pr/42)
   Added the meaning
 `,
+			nil,
 		},
 
 		{
@@ -88,6 +93,7 @@ func TestFuckingChangelog(t *testing.T) {
 - [#87](https://example.com/pr/87): Test
 - [#42](https://example.com/pr/42): Added the meaning
 `,
+			nil,
 		},
 
 		{
@@ -111,12 +117,65 @@ func TestFuckingChangelog(t *testing.T) {
 
 - [#42](https://example.com/pr/42): Added the meaning
 `,
+			nil,
+		},
+
+		{
+			`## [Under udvikling]
+`,
+			pullRequest{
+				Number: 87,
+				Title:  "Test",
+				Url:    "https://example.com/pr/87",
+			},
+			defaultItemTemplate,
+			`## [Under udvikling]
+
+* [PR-87](https://example.com/pr/87)
+  Test
+`,
+			nil,
+		},
+
+		{
+			`## [under udviklinG]
+`,
+			pullRequest{
+				Number: 87,
+				Title:  "Test",
+				Url:    "https://example.com/pr/87",
+			},
+			defaultItemTemplate,
+			`## [under udviklinG]
+
+* [PR-87](https://example.com/pr/87)
+  Test
+`,
+			nil,
+		},
+
+		{
+			`## [We're still working on it]
+`,
+			pullRequest{
+				Number: 87,
+				Title:  "Test",
+				Url:    "https://example.com/pr/87",
+			},
+			defaultItemTemplate,
+			"",
+			fmt.Errorf("cannot find Unreleased/Under udvikling header"),
 		},
 	}
 
 	for _, testCase := range testCases {
-		actual, _ := addPullRequest(testCase.changelog, testCase.pullRequest, testCase.itemTemplate)
-
-		assert.Equal(t, testCase.expected, actual)
+		actual, err := addPullRequest(testCase.changelog, testCase.pullRequest, testCase.itemTemplate)
+		if err != nil {
+			if assert.NotNil(t, testCase.expectedErr) {
+				assert.Equal(t, testCase.expectedErr.Error(), err.Error())
+			}
+		} else {
+			assert.Equal(t, testCase.expected, actual)
+		}
 	}
 }
