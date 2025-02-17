@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+* [PR-15](https://github.com/itk-dev/gh-itkdev/pull/15)
+  Added “Under udvikling” as allowed “Unreleased” header
+
 ## [v1.0.0] - 2024-11-12
 
 * [PR-11](https://github.com/itk-dev/gh-itkdev/pull/11)
