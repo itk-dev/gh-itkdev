@@ -1,11 +1,14 @@
 module github.com/itk-dev/gh-itkdev
 
-go 1.23
+go 1.23.0
+
+toolchain go1.24.1
 
 require (
 	github.com/cli/go-gh v1.2.1
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.9.0
+	golang.org/x/mod v0.24.0
 )
 
 require (

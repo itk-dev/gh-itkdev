@@ -11,10 +11,36 @@ import (
 	"slices"
 	"strings"
 	"time"
+
+	"golang.org/x/mod/semver"
 )
 
+func getBranchName(release string) (string, error) {
+	version := release
+	if !strings.HasPrefix(version, "v") {
+		version = "v" + version
+	}
+	if !semver.IsValid(version) {
+		return "", fmt.Errorf("invalid version: %s", release)
+	}
+
+	branchType := "release"
+	// Determine if the release is a "release" or a "hotfix".
+	//
+	// A "hotfix" is a version that's not a prerelease and has a patch version different from 0 (cf. https://semver.org/).
+	if semver.Prerelease(version) == "" && semver.MajorMinor(version)+".0" != version {
+		branchType = "hotfix"
+	}
+
+	return branchType + "/" + release, nil
+}
+
 func createReleaseBranch(release string, base string) (string, error) {
-	branch := "release/" + release
+	branch, err := getBranchName(release)
+	if err != nil {
+		return "", err
+	}
+
 	cmd := exec.Command("git", "checkout", "-b", branch, base)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
