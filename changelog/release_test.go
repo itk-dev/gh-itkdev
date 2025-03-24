@@ -8,6 +8,63 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestBranchName(t *testing.T) {
+	testCases := []struct {
+		release   string
+		expected  string
+		errorText string
+	}{
+		{
+			"v0.0.0",
+			"release/v0.0.0",
+			"",
+		},
+		{
+			"hest",
+			"",
+			"invalid version: hest",
+		},
+		{
+			"v0.0.1",
+			"hotfix/v0.0.1",
+			"",
+		},
+		{
+			"v1.0.0",
+			"release/v1.0.0",
+			"",
+		},
+		{
+			"1.0.0",
+			"release/1.0.0",
+			"",
+		},
+		{
+			"v1.0.0-rc1",
+			"release/v1.0.0-rc1",
+			"",
+		},
+		// Apart from testing, having release candidates for at patch release may not make sense.
+		{
+			"v1.0.1-rc1",
+			"release/v1.0.1-rc1",
+			"",
+		},
+	}
+
+	for _, testCase := range testCases {
+		actual, err := getBranchName(testCase.release)
+
+		if testCase.errorText != "" {
+			assert.NotNil(t, err)
+			assert.EqualError(t, err, testCase.errorText)
+		} else {
+			assert.Nil(t, err)
+			assert.Equal(t, testCase.expected, actual)
+		}
+	}
+}
+
 func TestRelease(t *testing.T) {
 	testCases := []struct {
 		changelog string
