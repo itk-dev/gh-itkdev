@@ -53,7 +53,11 @@ func Create(name string) {
 		log.Fatalf("error creating changelog %s: %s", name, err)
 	}
 
-	os.WriteFile(name, []byte(changelog), 0644)
+	err = os.WriteFile(name, []byte(changelog), 0o644)
+	if err != nil {
+		log.Fatalf("error writing changelog %s: %s", name, err)
+	}
+
 	fmt.Printf("Changelog written to %s\n", name)
 
 	fmt.Println(changelog)

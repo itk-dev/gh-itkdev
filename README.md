@@ -4,7 +4,7 @@
 
 ## Installation
 
-```shell
+``` shell
 gh extension install itk-dev/gh-itkdev
 ```
 
@@ -14,25 +14,25 @@ gh extension install itk-dev/gh-itkdev
 
 Manage changelog based on [keep a changelog](https://keepachangelog.com/en/1.1.0/):
 
-```shell
+``` shell
 gh itkdev changelog --help
 ```
 
 Create changelog:
 
-```shell
+``` shell
 gh itkdev changelog --create
 ```
 
 Update changelog for a pull request:
 
-```shell
+``` shell
 gh itkdev changelog --fucking-changelog
 ```
 
 Update changelog for a release (`«tag»`):
 
-```shell
+``` shell
 gh itkdev changelog --release «tag»
 ```
 

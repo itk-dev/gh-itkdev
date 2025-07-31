@@ -50,7 +50,7 @@ func addPullRequest(changelog string, pr pullRequest, itemTemplate string) (stri
 	}
 
 	// Make sure that we have a blank line after the header
-	if !(unreleasedHeaderIndex < len(lines)-2) {
+	if unreleasedHeaderIndex >= len(lines)-2 {
 		lines = append(lines, "")
 	}
 	insertIndex := unreleasedHeaderIndex + 2
@@ -59,7 +59,10 @@ func addPullRequest(changelog string, pr pullRequest, itemTemplate string) (stri
 		return "", fmt.Errorf("cannot parse item template: %s", err)
 	}
 	var builder strings.Builder
-	tmpl.Execute(&builder, pr)
+	err = tmpl.Execute(&builder, pr)
+	if err != nil {
+		return "", fmt.Errorf("error executing template: %s", err)
+	}
 	item := builder.String()
 
 	// If content right after insertion point is a header or a link, we insert a blank line
@@ -97,7 +100,10 @@ func FuckingChangelog(name string, itemTemplate string) {
 		log.Fatalf("error adding pull request: %s\n", err)
 	}
 
-	os.WriteFile(name, []byte(updatedChangelog), 0644)
+	err = os.WriteFile(name, []byte(updatedChangelog), 0o644)
+	if err != nil {
+		log.Fatalf("error writing changelog %s: %s", name, err)
+	}
 	fmt.Printf("Updated changelog written to %s\n", name)
 
 	gitDiff([]string{name})
