@@ -155,7 +155,10 @@ func Release(release string, base string, name string, commit bool) {
 	}
 	fmt.Printf("Branch %s created\n", branch)
 
-	os.WriteFile(name, []byte(updatedChangelog), 0644)
+	err = os.WriteFile(name, []byte(updatedChangelog), 0o644)
+	if err != nil {
+		log.Fatalf("error writing changelog %s: %s", name, err)
+	}
 	fmt.Printf("Updated changelog written to %s\n", name)
 
 	if commit {

@@ -1,0 +1,10 @@
+# https://golangci-lint.run/usage/configuration/#config-file
+
+version: "2"
+
+# https://golangci-lint.run/usage/false-positives/
+linters:
+  exclusions:
+    rules:
+      - path: 'cmd/changelog.go'
+        text: 'Error return value of `cmd.Usage` is not checked'

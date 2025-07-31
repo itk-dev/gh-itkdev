@@ -2,6 +2,9 @@
 
 version: '3'
 
+vars:
+  APP_NAME: gh-itkdev
+
 tasks:
   default:
     cmds:
@@ -10,26 +13,62 @@ tasks:
 
   build:
     desc: "Check code and build"
+    sources:
+      - '**/*.go'
+    generates:
+      - '{{.APP_NAME}}'
     cmds:
+      - go get -u ./...
+      - go mod tidy
+      - task: format
       - task: check
       - go build
-
-  check:
-    desc: "Check code"
-    cmds:
-      - task: format
-      - task: vet
-      - go mod tidy
 
   format:
     desc: "Format code"
     cmds:
       - go fmt ./...
+      - task format:gofumpt
+      - task format:golangci-lint
 
-  vet:
-    desc: "Vet code"
+  format:gofumpt:
+    desc: Run gofumpt if installed (https://github.com/mvdan/gofumpt)
+    cmds:
+      - |
+        if command -v gofumpt >/dev/null 2>&1; then
+          gofumpt -l -w .
+        fi
+
+  format:golangci-lint:
+    desc: Run golangci-lint if installed (https://golangci-lint.run)
+    cmds:
+      - |
+        if command -v golangci-lint >/dev/null 2>&1; then
+          golangci-lint fmt
+        fi
+
+  check:
+    desc: "Check code"
     cmds:
       - go vet ./...
+      - task: check:gofumpt
+      - task: check:golangci-lint
+
+  check:gofumpt:
+    desc: Run gofumpt if installed (https://github.com/mvdan/gofumpt)
+    cmds:
+      - |
+        if command -v gofumpt >/dev/null 2>&1; then
+          gofumpt -l .
+        fi
+
+  check:golangci-lint:
+    desc: Run golangci-lint if installed (https://golangci-lint.run)
+    cmds:
+      - |
+        if command -v golangci-lint >/dev/null 2>&1; then
+          golangci-lint run
+        fi
 
   test:
     desc: "Build and run tests"
@@ -46,7 +85,7 @@ tasks:
       - goreleaser check
       # @see https://goreleaser.com/cmd/goreleaser_build/
       - goreleaser build --single-target --snapshot --clean
-      - ./dist/*/gh-itkdev --version
+      - ./dist/*/{{.APP_NAME}} --version
 
   coding-standards-check:
     desc: "Apply and check coding standards"
