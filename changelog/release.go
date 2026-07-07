@@ -24,15 +24,9 @@ func getBranchName(release string) (string, error) {
 		return "", fmt.Errorf("invalid version: %s", release)
 	}
 
-	branchType := "release"
-	// Determine if the release is a "release" or a "hotfix".
-	//
-	// A "hotfix" is a version that's not a prerelease and has a patch version different from 0 (cf. https://semver.org/).
-	if semver.Prerelease(version) == "" && semver.MajorMinor(version)+".0" != version {
-		branchType = "hotfix"
-	}
-
-	return branchType + "/" + release, nil
+	// Our default Woodpecker setup only triggers on release/* branches,
+	// so always use that naming scheme, regardless of the nature of the change.
+	return "release/" + release, nil
 }
 
 func createReleaseBranch(release string, base string) (string, error) {
