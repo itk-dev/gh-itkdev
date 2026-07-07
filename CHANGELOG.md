@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+* [PR-19](https://github.com/itk-dev/gh-itkdev/pull/19)
+  Always use release/{version} branch naming convention
 * [PR-16](https://github.com/itk-dev/gh-itkdev/pull/16)
   Added version check to determine release type
 * [PR-15](https://github.com/itk-dev/gh-itkdev/pull/15)

@@ -26,7 +26,7 @@ func TestBranchName(t *testing.T) {
 		},
 		{
 			"v0.0.1",
-			"hotfix/v0.0.1",
+			"release/v0.0.1",
 			"",
 		},
 		{
